@@ -1,0 +1,43 @@
+---
+version: "2.0"
+services:
+  algod:
+    image: algorand/algod:latest
+    env:
+    - NETWORK=mainnet
+    - TELEMETRY_NAME=akash
+    - FAST_CATCHUP=1
+    expose:
+      - port: 4190
+        as: 4190
+        to:
+          - global: true
+      - port: 4191
+        as: 4191
+        to:
+          - global: true
+      - port: 8080
+        as: 8080
+        to:
+          - global: true
+profiles:
+  compute:
+    algod:
+      resources:
+        cpu:
+          units: 4
+        memory:
+          size: 8GB
+        storage:
+          - size: 100Gi
+  placement:
+    dcloud:
+      pricing:
+        algod:
+          denom: uakt
+          amount: 1000
+deployment:
+  algod:
+    dcloud:
+      profile: algod
+      count: 1
